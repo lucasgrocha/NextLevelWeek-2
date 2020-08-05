@@ -1,46 +1,60 @@
-import React from "react";
+import React from 'react';
 
-import whatsappIcon from "../../assets/images/icons/whatsapp.svg";
+import whatsappIcon from '../../assets/images/icons/whatsapp.svg';
 
-import './styles.css'
+import './styles.css';
+import api from '../../services/api';
 
-function TeacherItem() {
+export interface Teacher {
+  avatar: string;
+  bio: string;
+  cost: number;
+  id: number;
+  name: string;
+  subject: string;
+  user_id: number;
+  whatsapp: string;
+}
+
+interface TeacherItemProps {
+  teacher: Teacher;
+}
+
+const TeacherItem: React.FC<TeacherItemProps> = ({ teacher }) => {
+  function createNewConnection() {
+    api.post('connections', {
+      user_id: teacher.id,
+    });
+  }
+
   return (
     <article className="teacher-item">
       <header>
-        <img
-          src="https://avatars0.githubusercontent.com/u/37275161?s=460&u=285926518278bfbe642b8c912a211fd2a65ad3b2&v=4"
-          alt="Lucas"
-        />
+        <img src={teacher.avatar} alt={teacher.name} />
         <div>
-          <strong>Lucas Rocha</strong>
-          <span>Química </span>
+          <strong>{teacher.name}</strong>
+          <span>{teacher.subject} </span>
         </div>
       </header>
 
-      <p>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Iure nostrum
-        facilis in dolore.
-        <br />
-        <br />
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sunt nobis
-        labore praesentium non rerum consectetur, dolor aliquid asperiores
-        veniam voluptatibus illo modi aperiam ex omnis blanditiis earum eveniet.
-        Ab, repellendus.
-      </p>
+      <p>{teacher.bio}</p>
 
       <footer>
         <p>
           Preço/hora
-          <strong>R$ 80,00</strong>
+          <strong>R$ {teacher.cost}</strong>
         </p>
-        <button type="button">
+        <a
+          target="_blank"
+          onClick={createNewConnection}
+          href={`https://wa.me/${teacher.whatsapp}`}
+        >
           <img src={whatsappIcon} alt="Whatsapp" />
           Entrar em contato
-        </button>
+        </a>
       </footer>
     </article>
   );
-}
+};
 
 export default TeacherItem;
